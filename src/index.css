@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: sans-serif;
+}
+
+@keyframes float {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+}
+
+.bg-gradient-main {
+  background: linear-gradient(to top, #fba007, #ffc630);
+}
+
+.bg-gradient-overlay {
+  background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,212,255,0) 100%);
+}
+
+.radial-gradient-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(250, 214, 92, 0.8) 0%, rgba(250, 214, 92, 0) 60%);
+}
+
+.tasks-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 300px; /* Adjust width as needed */
+  background-color: #1f1f1f; /* Match your app's background */
+  transform: translateX(100%); /* Initially hidden off-screen */
+  transition: transform 0.3s ease-in-out; /* Add a smooth transition */
+  z-index: 100; /* Ensure it's above other content */
+}
+
+.tasks-panel.open {
+  transform: translateX(0); /* Slide in when open */
+}
+
+.tasks-panel h2 {
+  color: #f9c035; /* Example - match your theme */
+  margin-bottom: 1rem;
+}
+
+.tasks-panel ul {
+  list-style: none;
+  padding: 0;
+}
+
+.tasks-panel li {
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle background */
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+}
+
+.tasks-panel li .description { /* Target the description span */
+  flex: 1; /* Allow description to take up available space */
+}
+
+.tasks-panel a, 
+.tasks-panel button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tasks-panel a {
+  background-color: #007bff; /* Example button color */
+  color: white;
+  text-decoration: none;
+}
+
+.tasks-panel button {
+  background-color: #28a745; /* Example button color */
+  color: white;
+}
+
+.tasks-panel a:hover,
+.tasks-panel button:hover {
+  opacity: 0.8;
+}
