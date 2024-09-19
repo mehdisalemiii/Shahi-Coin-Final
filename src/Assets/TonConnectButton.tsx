@@ -1,21 +1,23 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // If using React Router
+import { useTonConnectUI } from '@tonconnect/ui-react';
 
 const TonConnectButton: React.FC = () => {
-  const navigate = useNavigate(); // If using React Router
+  const [tonConnectUI] = useTonConnectUI();
 
-  const handleClick = () => {
-    // Navigate to your TON Connect page
-    navigate('/ton-connect'); 
+  const handleConnect = async () => {
+    try {
+      await tonConnectUI.openModal();
+    } catch (error) {
+      console.error('TON Connect Error:', error);
+    }
   };
 
   return (
     <button
-      onClick={handleClick}
-      className="bg-gradient-main py-4 rounded-2xl flex justify-around w-full"
+      onClick={handleConnect}
+      className="bg-[#3886c8] text-center py-3 px-6 rounded-lg text-lg font-semibold backdrop-blur-md hover:bg-[#2c7ab0] transition-colors duration-300"
     >
-      <img src="./images/ton-icon.svg" alt="TON Icon" className="w-6 h-6" /> {/* Replace with your TON icon */}
-      <span>Connect TON Wallet</span>
+      <p>Connect Wallet</p>
     </button>
   );
 };

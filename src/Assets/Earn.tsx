@@ -1,7 +1,6 @@
 // © 2024 Malith Rukshan - https://github.com/Malith-Rukshan
 import React, { useState } from 'react';
 import { Task } from './types'; 
-import Arrow from './Arrow';
 
 interface Props {
   showTasks: boolean;
@@ -23,7 +22,7 @@ const Tasks: React.FC<Props> = ({ showTasks, openEarn, onTaskComplete }) => {
       description: 'Join Telegram Group',
       reward: 1000,
       completed: false,
-      link: 'https://t.me/yourgroup',
+      link: 'https://t.me/ShahiCoinCrypto',
     },
     // Add more tasks here
   ]);

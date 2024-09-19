@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {getFirestore , collection, addDoc } from "firebase/firestore"; 
 import { initializeApp } from 'firebase/app'; // Import initializeApp
 
@@ -27,7 +27,7 @@ addDoc(usersCollection, newUserData)
   });
   
 function MyComponent() {
-  const [userData, setUserData] = useState<any | null>(null);
+  const [userData] = useState<unknown | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null); // Type error as Error
 

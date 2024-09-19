@@ -1,2 +1,2 @@
-declare function MyComponent(): any;
+declare function MyComponent(): unknown;
 export default MyComponent;

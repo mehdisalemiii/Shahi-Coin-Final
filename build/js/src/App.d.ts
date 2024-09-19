@@ -1,2 +1,2 @@
-declare function App(): any;
+declare function App(): unknown;
 export default App;

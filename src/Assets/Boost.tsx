@@ -1,7 +1,5 @@
 // © 2024 Malith Rukshan - https://github.com/Malith-Rukshan
 import React, { useState } from 'react';
-import Arrow from './Arrow';
-import { Scrollbars } from 'react-custom-scrollbars-2';
 
 interface Item {
   name: string;
@@ -15,10 +13,6 @@ class InAppPurchase {
     { name: 'Full Energy', cost: 2000, energyLimit: 1 },
     { name: 'Basic', cost: 2000, energyLimit: 1 },
     { name: 'Neon Coin', cost: 2000, energyLimit: 1 },
-    { name: 'Galloon Gold', cost: 2000, energyLimit: 1 },
-    { name: 'Fanton', cost: 2000, energyLimit: 1 },
-    { name: 'Solidus AI Tech', cost: 2000, energyLimit: 1 },
-    { name: 'Whale', cost: 2000, energyLimit: 1 },
   ];
 
   purchaseItem(itemName: string): string {
