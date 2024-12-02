@@ -1,83 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import {getFirestore , collection, addDoc } from "firebase/firestore"; 
-import { initializeApp } from 'firebase/app'; // Import initializeApp
+// components/MyComponent.tsx
+import { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import { useUser } from '@supabase/auth-helpers-react';
+import React from 'react';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA2fG-gA-Dok_BRe9td_5Ale8suDa_Tm0s",
-  authDomain: "shahcoin.firebaseapp.com",
-  databaseURL: "https://shahcoin-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "shahcoin",
-  storageBucket: "shahcoin.appspot.com",
-  messagingSenderId: "654652281473",
-  appId: "1:654652281473:web:c4b31ed4975cde3e9e7380"
-};
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
-const usersCollection = collection(db, 'users'); // Replace 'users' with your collection name
 
-const newUserData = { name: 'John Doe', age: 30 };
-addDoc(usersCollection, newUserData)
-  .then((docRef) => {
-    console.log('Document written with ID:', docRef.id);
-  })
-  .catch((error) => {
-    console.error('Error adding document:', error);
-  });
-  
 function MyComponent() {
-  const [userData] = useState<unknown | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null); // Type error as Error
+    const user = useUser();
+    const [userData, setUserData] = useState<any | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-  const handleAddUser = async () => {
-    try {
-      const docRef = await addDoc(collection(db, "users"), {
-        first: "Ada",
-        last: "Lovelace",
-        born: 1815
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
+
+    useEffect(() => {
+        async function fetchUserData() {
+          if (!user || !user.id) {
+            setLoading(false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/userData?id=${user.id}`); // Use user.id, not user?.id
+                if (!response.ok) {  // Check if the response is ok
+                    const errorData = await response.json();
+                    const errorMessage = errorData?.error || 'Failed to fetch user data from API';
+                    throw new Error(errorMessage); // Throw error with message from API or generic message
+                }
+
+                const data = await response.json();
+
+
+                if (!data || data.length === 0) {
+                    setError('User not found in database.');
+                } else {
+                    setUserData(data[0]);
+                }
+            } catch (error: any) { // Add type annotation
+                console.error('Error fetching user data:', error);
+                setError(error.message); // Set error message from caught error
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchUserData();
+    }, [user]);
+
+    if (loading) {
+        return <div>Loading user data...</div>;
     }
-  };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // ... your Firestore fetching logic here ...
-      } catch (error) {
-        setError(error as Error); // Type assertion for error
-        console.error("Error fetching document: ", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []); 
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
-  const handleUserClick = async () => {
-    // ... your reCAPTCHA handling logic ...
-  };
+    // Check if userData exists BEFORE trying to access it
+    if (!userData || !user) {  
+      return <div>User data not available or user not logged in.</div>;
+    }
 
-  return (
-    <div>
-      <button onClick={handleUserClick}>Click Me</button>
-      <button onClick={handleAddUser}>Add User</button>
 
-      {/* Now include the loading/error/data display within the SAME return block */}
-      {loading && <p>Loading user data...</p>}
-      {error && <p>Error: {error.message}</p>}
-      {userData && (
+    return (
         <div>
-          <p>Name: {userData.name}</p> 
-          {/* ... display other user data ... */}
+            <p>User ID: {user.id}</p> 
+            <p>Email: {user.email}</p>
+            <p>Telegram ID: {userData.telegram_id}</p>
+            <p>Points: {userData.points}</p>
         </div>
-      )}
-    </div>
-  ); // Only ONE return statement within the function
+    );
 }
 
 export default MyComponent;
+

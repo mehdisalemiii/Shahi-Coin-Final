@@ -1,0 +1,7 @@
+# liara.yaml
+platform: node 
+build: npm install 
+port: 5000
+start: node backend/server.mjs  
+env:
+  MONGODB_URI: mongodb://root:w11gtQZhbR1xHT33jpvuEjs8@monte-rosa.liara.cloud:33997/my-app?authSource=admin

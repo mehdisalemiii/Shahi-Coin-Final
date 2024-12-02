@@ -1,6 +1,7 @@
 {
-    "hosting": {
-      "public": "public",
+  "hosting": {
+    "site": "shahcoincrypto",
+    "public": "Shah-Coin-Final",
       "ignore": [
         "firebase.json",
         "**/.*",

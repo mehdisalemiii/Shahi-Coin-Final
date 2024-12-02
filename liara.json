@@ -1,0 +1,11 @@
+{
+  "platform": "node",
+  "port": 5000, 
+  "build": {
+    "type": "node.js",
+    "commands": [
+      "cd frontend && npm run build" 
+    ]
+  },
+  "start": "node backend/server.mjs" 
+}

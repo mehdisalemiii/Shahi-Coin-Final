@@ -1,0 +1,8 @@
+{
+  "platform": "node",
+  "build": {
+    "type": "node.js"
+  },
+  "port": 5000, 
+  "start": "npm run start" 
+}

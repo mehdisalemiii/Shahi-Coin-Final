@@ -1,88 +1,58 @@
-require('dotenv').config(); // Load environment variables
-
-import express from 'express';
-import { connect } from 'mongoose';
-import cors from 'cors'; 
+import express, { json } from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import User from './src/models/User.js';
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5000; // Use the port provided by your hosting environment or 5000
+const mongoURI = 'mongodb://root:w11gtQZhbR1xHT33jpvuEjs8@monte-rosa.liara.cloud:33997/my-app?authSource=admin';
 
-// Access the URI from environment variables
-const uri = process.env.uri; 
+app.use(cors());
+app.use(json());
 
-// Connect to MongoDB (make sure the 'uri' variable is used correctly)
-connect(uri, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
-});
-app.use(bodyParser.json());
-app.use(cors()); 
+// Connect to MongoDB
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Connected to MongoDB using Mongoose');
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+  });
 
-const client = new MongoClient(uri);
-async function connectToDatabase() {
+// GET /api/users/:telegramId - Get user by Telegram ID
+app.get('/api/users/:telegramId', async (req, res) => {
   try {
-    await client.connect();
-    console.log('Connected to MongoDB!');
-  } catch (err) {
-    console.error('Error connecting to MongoDB:', err);
+    const user = await User.findOne({ telegramId: req.params.telegramId });
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Error fetching user' });
   }
-}
+});
 
-connectToDatabase();
+// POST /api/users - Create or update user
+app.post('/api/users', async (req, res) => {
+  try {
+    const { telegramId, username, firstName, lastName } = req.body;
 
+    let user = await User.findOneAndUpdate(
+      { telegramId },
+      { username, firstName, lastName },
+      { upsert: true, new: true }
+    );
+
+    res.json({ message: 'User created/updated', user });
+  } catch (error) {
+    console.error('Error creating/updating user:', error);
+    res.status(500).json({ message: 'Error creating/updating user' });
+  }
+});
+
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
-app.get('/api/users/:userId', async (req, res) => { 
-    try {
-      const userId = req.params.userId; 
-      const db = client.db('your-database-name');
-      const usersCollection = db.collection('users');
-      const user = await usersCollection.findOne({ _id: userId }); // Assuming you use _id
-  
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-      res.json(user);
-    } catch (error) {
-      console.error('Error fetching user:', error);
-      res.status(500).json({ message: 'Failed to fetch user' });
-    }
-  });
-  
-  app.post('/api/users', async (req, res) => { 
-    try {
-      const newUser = req.body; 
-      const db = client.db('your-database-name');
-      const usersCollection = db.collection('users');
-      const result = await usersCollection.insertOne(newUser);
-      res.status(201).json(result.ops[0]); 
-    } catch (error) {
-      console.error('Error creating user:', error);
-      res.status(500).json({ message: 'Failed to create user' });
-    }
-  });
-  
-  app.put('/api/users/:userId', async (req, res) => { 
-    try {
-      const userId = req.params.userId;
-      const updatedData = req.body; 
-      const db = client.db('your-database-name');
-      const usersCollection = db.collection('users');
-  
-      const result = await usersCollection.findOneAndUpdate(
-        { _id: userId },
-        { $set: updatedData }, 
-        { returnOriginal: false } 
-      );
-  
-      if (!result.value) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-      res.json(result.value); 
-    } catch (error) {
-      console.error('Error updating user:', error);
-      res.status(500).json({ message: 'Failed to update user' });
-    }
-  });

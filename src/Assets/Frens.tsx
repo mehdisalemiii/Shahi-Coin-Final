@@ -12,7 +12,7 @@ const Frens: React.FC<Props> = ({ showFrens, openFrens }) => {
   useEffect(() => {
     const generateReferralLink = () => {
       const uniqueId = Math.random().toString(36).substring(2, 15);
-      return `https://your-app.com/referral/${uniqueId}`; // Replace with your actual app URL
+      return `https://shahcoin.liara.run/referral/${uniqueId}`; // Replace with your actual app URL
     };
 
     setReferralLink(generateReferralLink());

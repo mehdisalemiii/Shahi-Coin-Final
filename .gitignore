@@ -7,10 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Node modules
 node_modules
 dist
 dist-ssr
-*.local
 
 # Editor directories and files
 .vscode/*
@@ -25,3 +25,18 @@ dist-ssr
 
 # System
 .DS_Store
+
+# Local env files
+.env
+.env*local
+
+# Firebase
+firebase-debug.log*
+firebase-debug.json*
+
+# Build files
+public/build/js
+build/js
+
+# Prisma
+.lib/prisma
